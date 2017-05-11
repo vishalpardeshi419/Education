@@ -4,7 +4,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
-var User = require('../models/subscribe');
 
 // Register
 router.get('/register', function(req, res){
@@ -31,7 +30,10 @@ router.get('/service', function(req, res){
 router.post('/register', function(req, res){
 	var name = req.body.name;
 	var email = req.body.email;
+	var mobile = req.body.mobile;
+	var gender = req.body.gender;
 	var username = req.body.username;
+	var DOB = req.body.DOB;
 	var password = req.body.password;
 	var password2 = req.body.password2;
 
@@ -39,6 +41,7 @@ router.post('/register', function(req, res){
 	req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
+	req.checkBody('mobile', 'Mobile No is required').notEmpty();
 	req.checkBody('username', 'Username is required').notEmpty();
 	req.checkBody('password', 'Password is required').notEmpty();
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
@@ -53,6 +56,9 @@ router.post('/register', function(req, res){
 		var newUser = new User({
 			name: name,
 			email:email,
+			mobile:mobile,
+			gender:gender,
+			DOB:DOB,
 			username: username,
 			password: password
 		});
@@ -67,43 +73,6 @@ router.post('/register', function(req, res){
 		res.redirect('/users/login');
 	}
 });
-
-
-//subscribe
-router.post('/home', function(req, res){
-	var name = req.body.name;
-	var email = req.body.email;
-	
-	// Validation
-	req.checkBody('name', 'Name is required').notEmpty();
-	req.checkBody('email', 'Email is required').notEmpty();
-	req.checkBody('email', 'Email is not valid').isEmail();
-	
-	var errors = req.validationErrors();
-
-	if(errors){
-		res.render('subscribe',{
-			errors:errors
-		});
-	} else {
-		var newUser = new User({
-			name: name,
-			email:email,
-			username: username,
-			password: password
-		});
-
-		User.createUser(newUser, function(err, user){
-			if(err) throw err;
-			console.log(user);
-		});
-
-		req.flash('success_msg', 'You are now subscribe.');
-
-		res.redirect('/');
-	}
-});
-
 
 passport.use(new LocalStrategy(
   function(username, password, done) {

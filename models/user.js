@@ -13,6 +13,15 @@ var UserSchema = mongoose.Schema({
 	email: {
 		type: String
 	},
+	mobile: {
+		type: String
+	},
+	gender:{
+		type: String
+	},
+	DOB:{
+		type: String
+	},	
 	name: {
 		type: String
 	}
